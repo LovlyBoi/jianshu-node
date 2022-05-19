@@ -9,9 +9,13 @@ class UsersService {
     const result = await connection.execute(statement, [username, password]);
     return result[0];
   }
-  async login(username, password) {
-
+  // 用户登录
+  async login(username) {
+    const statement = `SELECT username, password FROM users WHERE username = ?;`
+    const result = await connection.execute(statement, [username]);
+    return result[0]
   }
+  // 查看用户名
   async getUserByName(username) {
     const statement = `SELECT * FROM users WHERE username = ?;`;
     const result = await connection.execute(statement, [username]);

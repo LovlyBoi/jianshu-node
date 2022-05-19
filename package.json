@@ -5,11 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./main.js"
+    "start": "nodemon ./main.js",
+    "cloc": "cloc ./ --exclude-dir=node_modules --exclude-ext=json,md"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.0.1",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
