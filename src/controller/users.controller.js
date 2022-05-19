@@ -1,15 +1,20 @@
 const usersService = require("../service/users.service");
 
+// 业务逻辑
 class UsersController {
-  async login(ctx, next) {
+  async register(ctx, next) {
     const { username, password } = ctx.request.body;
-    await usersService.login(username, password);
+    const result = await usersService.register(username, password);
+    console.log(result)
     ctx.body = {
       username,
       password,
-      msg: "ok",
+      result: result,
     };
     next();
+  }
+  async login() {
+
   }
 }
 
