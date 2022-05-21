@@ -3,8 +3,7 @@ const emit = require("../utils/errorEmitter");
 
 class UploaderController {
   async imageUploader(ctx, next) {
-    console.log(ctx.req.files);
-    if (ctx.req.files) {
+    if (ctx.req.files.length >= 1) {
       const url = ctx.req.files.map(
         (file) => `${APP_HOSTNAME}:${APP_PORT}/${file.filename}`
       );

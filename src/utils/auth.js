@@ -26,11 +26,11 @@ class Auth {
     if (!token) {
       result.result = false;
       result.error = new Error('token为空');
+      return result;
     }
     let decoded;
     try {
       decoded = jwt.verify(token, publicKey);
-      console.log(decoded, '----')
     } catch (e) {
       result.result = false;
       result.error = e;

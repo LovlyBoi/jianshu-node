@@ -7,3 +7,6 @@ node_modules
 .env.*.local
 
 secret.js
+
+# 数据
+cache/
