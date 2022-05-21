@@ -3,6 +3,7 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 module.exports = {
+  APP_HOSTNAME,
   APP_PORT,
   MYSQL_HOST,
   MYSQL_PORT,

@@ -1,6 +1,5 @@
-const sign = require("jsonwebtoken/sign");
 const usersService = require("../service/users.service");
-const { hash, verify, signToken, verifyToken } = require("../utils/auth");
+const { hash, verify, signToken } = require("../utils/auth");
 const emit = require("../utils/errorEmitter");
 
 // 业务逻辑
