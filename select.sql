@@ -8,6 +8,7 @@ SELECT
 FROM
   blogs
   JOIN users ON blogs.author_id = users.id
+ORDER BY blogs.updateAt DESC
 LIMIT
   10 OFFSET ?;
 
@@ -25,39 +26,76 @@ FROM
 WHERE
   blogs.id = ?;
 
--- 查询某篇博客的评论
-# 查询 blog_id 的全部评论。(包括顶级+非顶级评论)  表关联，肯定存在冗余字段。
+-- 拿到所有顶级评论
 SELECT
-  A.offer_comment_id,
-  A.offer_user_id,
-  A.offer_content,
-  A.like offer_like,
-  B.own_user_id own_user_id,
-  B.content own_content,
-  B.like own_like
+  c.id comment_id,
+  c.blog_id blog_id,
+  c.content content,
+  u.id user_id,
+  u.username username,
+  /* u.avatar avatar, */
+  c.createAt,
+  c.updateAt
+FROM
+  comments c
+  JOIN users u ON c.author_id = u.id
+WHERE
+  c.blog_id = 1
+ORDER BY
+  c.createAt DESC;
+
+-- 拿到博客的所有评论树
+SELECT
+  cu.comment_id,
+  cu.content,
+  JSON_OBJECT(
+    'author_id',
+    cu.user_id,
+    'author_name',
+    cu.username,
+    'avatar',
+    cu.avatar
+  ) author,
+  JSON_ARRAYAGG(
+    JSON_OBJECT(
+      'comment_id',
+      r.id,
+      'content',
+      r.content,
+      'author',
+      JSON_OBJECT(
+        'author_id',
+        u.id,
+        'author_name',
+        u.username,
+        'author_avatar',
+        u.avatar
+      )
+    )
+  )
 FROM
   (
     SELECT
-      id offer_comment_id,
-      author_id offer_user_id,
-      content offer_content,
-      like
+      c.id comment_id,
+      c.blog_id blog_id,
+      c.content content,
+      u.id user_id,
+      u.username username,
+      u.avatar avatar,
+      c.createAt,
+      c.updateAt
     FROM
-      comments
+      comments c
+      JOIN users u ON c.author_id = u.id
     WHERE
-      # 替换blog_id
-      blog_id = ?
-  ) AS A
-  RIGHT JOIN (
-    SELECT
-      own_user_id,
-      content,
-      like,
-      offer_user_id
-    FROM
-      comments
-    WHERE
-      blog_id = ?
-  ) AS B ON A.offer_comment_id = B.father_id
+      -- 替换 id
+      c.blog_id = 1
+    ORDER BY
+      c.createAt DESC
+  ) as cu
+  LEFT JOIN reply r ON cu.comment_id = r.comment_id
+  LEFT JOIN users u ON u.id = r.author_id
+GROUP BY
+  cu.comment_id
 LIMIT
-  10 OFFSET ?;
+  10 OFFSET 0;

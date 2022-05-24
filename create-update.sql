@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id` INT PRIMARY KEY AUTO_INCREMENT,
   `username` VARCHAR(30) NOT NULL UNIQUE,
   `password` VARCHAR(80) NOT NULL,
+  `avatar` VARCHAR(80) DEFAULT 'http://localhost:10000/avatar-1653271813785.jpeg',
   `createAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updateAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -14,33 +15,28 @@ CREATE TABLE IF NOT EXISTS `blogs` (
   `type` VARCHAR(20) NOT NULL,
   -- 博客存储的位置
   `location` VARCHAR(50) NOT NULL,
-  -- 博客的哈希值
-  /* `summary` VARCHAR(80) NOT NULL, */
   -- 作者id
   `author_id` INT NOT NULL,
   `createAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `updateAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updateAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+INSERT INTO  blogs ( type, location, author_id ) VALUES(
+  '笔记',
+  'markdown/test.md',
+  1 
+);
+INSERT INTO  blogs ( type, location, author_id ) VALUES(
+  '随笔',
+  'markdown/test1.md',
+  1 
 );
 
 -- 评论表
 CREATE TABLE IF NOT EXISTS `comments` (
   `id` INT PRIMARY KEY AUTO_INCREMENT,
   `blog_id` INT NOT NULL,
-  `author_id` INT NOT NULL, # 本评论持有者id
-  `content` VARCHAR(100) NOT NULL,
-  `is_sub` INT NOT NULL,
-  `father_id` INT,
-  `like` INT DEFAULT 0,
-  `offer_user_id` INT, # 跟踪对方的id，如果是顶级评论，那么此字段为null
-  `createAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `updateAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-)
-
--- 评论回复
-CREATE TABLE IF NOT EXISTS `reply` (
-  `id` INT PRIMARY KEY AUTO_INCREMENT,
-  `comment_id` INT NOT NULL,
-  -- 回复作者id
+  -- 本评论持有者id
   `author_id` INT NOT NULL,
   `content` VARCHAR(100) NOT NULL,
   `like` INT DEFAULT 0,
@@ -48,21 +44,36 @@ CREATE TABLE IF NOT EXISTS `reply` (
   `updateAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- 评论表
-/* CREATE TABLE IF NOT EXISTS `comments` (
+INSERT INTO  comments ( blog_id, author_id, content ) VALUES(
+  1,
+  2,
+  '文章写得很好！'
+);
+INSERT INTO  comments ( blog_id, author_id, content ) VALUES(
+  1,
+  1,
+  '写的什么破玩意！'
+);
+
+-- 评论回复
+CREATE TABLE IF NOT EXISTS `reply` (
   `id` INT PRIMARY KEY AUTO_INCREMENT,
-  -- 评论属于哪个博客
-  `blog_id` INT NOT NULL,
-  -- 评论是谁发的
-  `user_id` INT NOT NULL,
-  -- 评论内容
+  `comment_id` INT NOT NULL,
+  -- 作者id
+  `author_id` INT NOT NULL,
   `content` VARCHAR(100) NOT NULL,
-  -- 评论是否是子评论
-  `is_sub` INT NOT NULL,
-  -- 评论的父评论
-  `father_id` INT,
-  -- 点赞数
   `like` INT DEFAULT 0,
   `createAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `updateAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-); */
+  `updateAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+INSERT INTO reply ( comment_id, author_id, content ) VALUES(
+  2,
+  2,
+  '写的明明很好！'
+);
+INSERT INTO reply ( comment_id, author_id, content ) VALUES(
+  2,
+  2,
+  '你行你上啊'
+);
