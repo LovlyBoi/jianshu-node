@@ -2,15 +2,25 @@
 SELECT
   blogs.id blog_id,
   blogs.type blog_type,
+  blogs.title title,
+  blogs.description description,
+  blogs.url url,
+  blogs.location location,
+  count(comments.id) comments,
+  blogs.likes likes,
   users.username author,
   blogs.createAt,
   blogs.updateAt
 FROM
   blogs
   JOIN users ON blogs.author_id = users.id
-ORDER BY blogs.updateAt DESC
+  LEFT JOIN comments ON blogs.id = comments.blog_id
+GROUP BY
+  blogs.id
+ORDER BY
+  blogs.updateAt DESC
 LIMIT
-  10 OFFSET ?;
+  ? OFFSET ?;
 
 -- 查询某个博客具体信息
 SELECT
@@ -26,25 +36,37 @@ FROM
 WHERE
   blogs.id = ?;
 
--- 拿到所有顶级评论
-SELECT
-  c.id comment_id,
-  c.blog_id blog_id,
-  c.content content,
-  u.id user_id,
-  u.username username,
-  /* u.avatar avatar, */
-  c.createAt,
-  c.updateAt
-FROM
-  comments c
-  JOIN users u ON c.author_id = u.id
-WHERE
-  c.blog_id = 1
-ORDER BY
-  c.createAt DESC;
+-- 发布博客
+INSERT INTO
+  blogs (
+    type,
+    title,
+    description,
+    url,
+    location,
+    author_id
+  )
+VALUES
+  (?, ?, ?, ?, ?, ?);
 
--- 拿到博客的所有评论树
+-- 拿到所有顶级评论
+/* SELECT
+ c.id comment_id,
+ c.blog_id blog_id,
+ c.content content,
+ u.id user_id,
+ u.username username,
+ u.avatar avatar,
+ c.createAt,
+ c.updateAt
+ FROM
+ comments c
+ JOIN users u ON c.author_id = u.id
+ WHERE
+ c.blog_id = 1
+ ORDER BY
+ c.createAt DESC; */
+-- 拿到指定博客的所有评论（树）
 SELECT
   cu.comment_id,
   cu.content,

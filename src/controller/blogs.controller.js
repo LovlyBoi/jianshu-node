@@ -13,6 +13,7 @@ function handleComments(result) {
 }
 
 class BlogsController {
+  // 通过博客id拿到博客评论
   async getCommentsById(ctx, next) {
     try {
       const { id: blogId } = ctx.params;
@@ -25,9 +26,12 @@ class BlogsController {
     }
     await next();
   }
+  // 获取全部博客，分页查询
   async getBlogs(ctx, next) {
     try {
       const { ps: limit, pn: offset } = ctx.query;
+      limit ??= 10
+      offset ??= 0
       const result = await blogService.getBlogs(limit, offset);
       ctx.body = result;
     } catch (e) {
@@ -35,6 +39,14 @@ class BlogsController {
       return emmit(ctx, "服务器查询错误", 500);
     }
     await next();
+  }
+  // 发布博客
+  async publishBlog(ctx, next) {
+    console.log(ctx.request.body.blog)
+    ctx.body = {
+      msg: 'publish'
+    }
+    await next()
   }
 }
 

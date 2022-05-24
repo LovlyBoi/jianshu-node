@@ -69,19 +69,45 @@ class BlogService {
     `SELECT
       blogs.id blog_id,
       blogs.type blog_type,
+      blogs.title title,
+      blogs.description description,
+      blogs.url url,
+      blogs.location location,
+      count(comments.id) comments,
+      blogs.likes likes,
       users.username author,
       blogs.createAt,
       blogs.updateAt
     FROM
       blogs
       JOIN users ON blogs.author_id = users.id
-    ORDER BY blogs.updateAt DESC
+      LEFT JOIN comments ON blogs.id = comments.blog_id
+    GROUP BY blogs.id
+    ORDER BY
+      blogs.updateAt DESC
     LIMIT
       ? OFFSET ?;`;
     const result = await connection.execute(statement, [
       limit + "",
       offset + "",
     ]);
+    return result[0];
+  }
+
+  async publishBlog(blog) {
+    const statement = 
+    `INSERT INTO
+      blogs (
+        type,
+        title,
+        description,
+        url,
+        location,
+        author_id
+      )
+    VALUES
+      (?, ?, ?, ?, ?, ?);`;
+    const result = await connection.execute(statement, []);
     return result[0];
   }
 }

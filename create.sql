@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS `blogs` (
   `id` INT PRIMARY KEY AUTO_INCREMENT,
   -- 博客类型
   `type` VARCHAR(20) NOT NULL,
+  -- 博客题目
+  `title` VARCHAR(50) NOT NULL,
   -- 博客存储的位置
   `location` VARCHAR(50) NOT NULL,
   -- 博客的哈希值
