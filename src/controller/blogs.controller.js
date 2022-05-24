@@ -1,6 +1,9 @@
-const { off } = require("../app");
+const path = require("path");
+const fs = require("fs");
+const { APP_HOSTNAME, APP_PORT } = require("../app/config");
 const blogService = require("../service/blogs.service");
-const emmit = require("../utils/errorEmitter");
+const md5 = require("md5");
+const emit = require("../utils/errorEmitter");
 
 // 去除都是null的子评论
 function handleComments(result) {
@@ -10,6 +13,17 @@ function handleComments(result) {
     });
   }
   return result;
+}
+
+// 存储文章，md5摘要防止重复上传
+async function cacheArticle(article) {
+  const filename = md5(article);
+  console.log(filename);
+  await fs.promises.writeFile(
+    path.resolve(__dirname, `../cache/html/${filename}`),
+    article
+  );
+  return filename;
 }
 
 class BlogsController {
@@ -22,7 +36,7 @@ class BlogsController {
       ctx.body = handleComments(result);
     } catch (e) {
       console.log(e);
-      return emmit(ctx, "服务器查询错误", 500);
+      return emit(ctx, "服务器查询错误", 500);
     }
     await next();
   }
@@ -30,23 +44,37 @@ class BlogsController {
   async getBlogs(ctx, next) {
     try {
       const { ps: limit, pn: offset } = ctx.query;
-      limit ??= 10
-      offset ??= 0
+      limit ??= 10;
+      offset ??= 0;
       const result = await blogService.getBlogs(limit, offset);
       ctx.body = result;
     } catch (e) {
       console.log(e);
-      return emmit(ctx, "服务器查询错误", 500);
+      return emit(ctx, "服务器查询错误", 500);
     }
     await next();
   }
   // 发布博客
   async publishBlog(ctx, next) {
-    console.log(ctx.request.body.blog)
-    ctx.body = {
-      msg: 'publish'
+    const blog = ctx.request.body.blog;
+    // 存储文章
+    const filename = await cacheArticle(blog.article);
+    // 定制 blog 对象
+    blog.location = `cache/html/${filename}`;
+    blog.type ??= "随笔";
+    blog.url = `${APP_HOSTNAME}:${APP_PORT}/article/${filename}`;
+    console.log(blog);
+    try {
+      // blog信息持久化
+      await blogService.publishBlog(blog);
+    } catch (e) {
+      console.log(e);
+      return emit(ctx, "服务器查询错误", 500);
     }
-    await next()
+    ctx.body = {
+      msg: "发布成功",
+    };
+    await next();
   }
 }
 

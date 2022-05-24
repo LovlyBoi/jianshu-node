@@ -2,8 +2,7 @@ const connection = require("../app/database");
 
 class BlogService {
   async getComments(id, limit, offset) {
-    const statement = 
-    `SELECT
+    const statement = `SELECT
       cu.comment_id,
       cu.content,
       JSON_OBJECT(
@@ -65,8 +64,7 @@ class BlogService {
   }
 
   async getBlogs(limit, offset) {
-    const statement = 
-    `SELECT
+    const statement = `SELECT
       blogs.id blog_id,
       blogs.type blog_type,
       blogs.title title,
@@ -94,9 +92,15 @@ class BlogService {
     return result[0];
   }
 
-  async publishBlog(blog) {
-    const statement = 
-    `INSERT INTO
+  async publishBlog({
+    type,
+    title,
+    description,
+    url,
+    location,
+    userId: author_id,
+  }) {
+    const statement = `INSERT INTO
       blogs (
         type,
         title,
@@ -107,7 +111,15 @@ class BlogService {
       )
     VALUES
       (?, ?, ?, ?, ?, ?);`;
-    const result = await connection.execute(statement, []);
+
+    const result = await connection.execute(statement, [
+      type,
+      title,
+      description,
+      url,
+      location,
+      author_id,
+    ]);
     return result[0];
   }
 }

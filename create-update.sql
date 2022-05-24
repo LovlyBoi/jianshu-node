@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `blogs` (
   -- 点赞数
   `likes` INT DEFAULT 0,
   -- 博客地址
-  `url` VARCHAR(50) NOT NULL,
+  `url` VARCHAR(100) NOT NULL,
   -- 博客存储的位置
   `location` VARCHAR(50) NOT NULL,
   -- 作者id
