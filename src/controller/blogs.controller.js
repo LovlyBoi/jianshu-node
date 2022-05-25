@@ -1,9 +1,7 @@
-const path = require("path");
-const fs = require("fs");
 const { APP_HOSTNAME, APP_PORT } = require("../app/config");
 const blogService = require("../service/blogs.service");
-const md5 = require("md5");
 const emit = require("../utils/errorEmitter");
+const { cacheArticle, getArticle } = require("../utils/cacheArticle");
 
 // 去除都是null的子评论
 function handleComments(result) {
@@ -15,18 +13,28 @@ function handleComments(result) {
   return result;
 }
 
-// 存储文章，md5摘要防止重复上传
-async function cacheArticle(article) {
-  const filename = md5(article);
-  console.log(filename);
-  await fs.promises.writeFile(
-    path.resolve(__dirname, `../cache/html/${filename}`),
-    article
-  );
-  return filename;
-}
-
 class BlogsController {
+  // 拿到id对应博客正文
+  async getBlogContent(ctx, next) {
+    const id = ctx.request.params.id;
+    let blog;
+    // 去数据库拿id对应的博客信息
+    try {
+      blog = await blogService.getBlogById(id);
+      if (blog.length < 1) return emit(ctx, "没有这篇文章哦", 400);
+      blog = blog[0];
+    } catch (e) {
+      console.log(e);
+      return emit(ctx, "服务器查询错误", 500);
+    }
+    // 去文件系统读入文章信息
+    const article = await getArticle(blog.location);
+    ctx.body = {
+      article: article.toString(),
+      ...blog,
+    }
+    await next();
+  }
   // 通过博客id拿到博客评论
   async getCommentsById(ctx, next) {
     try {

@@ -1,6 +1,27 @@
 const connection = require("../app/database");
 
 class BlogService {
+  async getBlogById(id) {
+    const statement = `SELECT
+      blogs.id id,
+      blogs.type type,
+      blogs.title title,
+      blogs.likes likes,
+      blogs.location location,
+      users.username author,
+      users.id author_id,
+      users.avatar author_avatar,
+      blogs.createAt,
+      blogs.updateAt
+    FROM
+      blogs
+      JOIN users ON blogs.author_id = users.id
+    WHERE
+      blogs.id = ?;`;
+    const result = await connection.execute(statement, [id]);
+    return result[0];
+  }
+
   async getComments(id, limit, offset) {
     const statement = `SELECT
       cu.comment_id,
