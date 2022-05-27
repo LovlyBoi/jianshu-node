@@ -84,6 +84,20 @@ class BlogsController {
     };
     await next();
   }
+  // 发布评论
+  async publishComment(ctx, next) {
+    const comment = ctx.request.body.comment
+    console.log(comment)
+    try {
+      await blogService.publishComment(comment)
+    } catch (e) {
+      emit(ctx, '服务器查询失败', 500)
+      console.log(e)
+    }
+    ctx.body = {
+      msg: '发布成功！'
+    }
+  }
 }
 
 module.exports = new BlogsController();

@@ -143,6 +143,19 @@ class BlogService {
     ]);
     return result[0];
   }
+
+  async publishComment({ blogId, authorId, content }) {
+    const statement = `INSERT INTO
+      comments (blog_id, author_id, content)
+    VALUES
+      (?, ?, ?);`;
+    const result = await connection.execute(statement, [
+      blogId,
+      authorId,
+      content,
+    ]);
+    return result[0];
+  }
 }
 
 module.exports = new BlogService();

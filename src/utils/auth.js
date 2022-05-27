@@ -30,7 +30,6 @@ class Auth {
     }
     let decoded;
     try {
-      console.log(token)
       decoded = jwt.verify(token, publicKey);
     } catch (e) {
       result.result = false;

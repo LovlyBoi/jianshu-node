@@ -11,7 +11,7 @@ class UsersService {
   }
   // 用户登录
   async login(username) {
-    const statement = `SELECT username, password, id FROM users WHERE username = ?;`;
+    const statement = `SELECT username, password, id, avatar FROM users WHERE username = ?;`;
     const result = await connection.execute(statement, [username]);
     return result[0];
   }
@@ -21,9 +21,9 @@ class UsersService {
     const result = await connection.execute(statement, [username]);
     return result[0];
   }
-  // 获取用户id
-  async getUserId(username) {
-    const statement = `SELECT id FROM users WHERE username = ?;`;
+  // 获取用户信息
+  async getUserInfo(username) {
+    const statement = `SELECT * FROM users WHERE username = ?;`;
     const result = await connection.execute(statement, [username]);
     return result[0];
   }

@@ -14,10 +14,10 @@ class UsersController {
       console.log("注册失败：", e);
       return emit(ctx, "注册失败", 406);
     }
-    // 拿到用户id
-    let userId;
+    // 拿到用户信息
+    let user;
     try {
-      userId = (await usersService.getUserId(username))[0].id;
+      user = (await usersService.getUserInfo(username))[0];
     } catch(e) {
       console.log(e)
       return emit(ctx, "注册成功，用户id获取失败", 500);
@@ -26,7 +26,8 @@ class UsersController {
     const token = await signToken({username});
     ctx.body = {
       username,
-      userId,
+      userId: user.id,
+      avatar: user.avatar,
       token,
       msg: "注册成功！",
     };
@@ -48,12 +49,13 @@ class UsersController {
     }
 
     // 拿到数据库里的哈希去校验
-    const [{ password: crypted, id: userId }] = result;
+    const [{ password: crypted, id: userId, avatar }] = result;
     if (await verify(password, crypted)) {
       const token = await signToken({username});
       ctx.body = {
         username,
         userId,
+        avatar,
         token,
         msg: "登录成功！",
       };

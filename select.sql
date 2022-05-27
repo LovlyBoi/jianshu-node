@@ -66,6 +66,7 @@ VALUES
  c.blog_id = 1
  ORDER BY
  c.createAt DESC; */
+
 -- 拿到指定博客的所有评论（树）
 SELECT
   cu.comment_id,
@@ -121,3 +122,4 @@ GROUP BY
   cu.comment_id
 LIMIT
   10 OFFSET 0;
+ 

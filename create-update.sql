@@ -79,6 +79,7 @@ CREATE TABLE IF NOT EXISTS `comments` (
   `updateAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- 发布评论
 INSERT INTO
   comments (blog_id, author_id, content)
 VALUES

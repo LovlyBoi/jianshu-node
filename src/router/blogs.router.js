@@ -12,7 +12,7 @@ blogsRouter.get("/:id", checkToken, blogsController.getBlogContent);
 blogsRouter.get("/:id/comments", checkToken, blogsController.getCommentsById);
 
 // 拿到所有博客信息
-blogsRouter.get("/", checkToken, blogsController.getBlogs);
+blogsRouter.get("/", blogsController.getBlogs);
 
 // 发布博客
 blogsRouter.post(
@@ -21,5 +21,8 @@ blogsRouter.post(
   verifyBlog,
   blogsController.publishBlog
 );
+
+// 发布评论
+blogsRouter.post("/publishComment", checkToken, blogsController.publishComment);
 
 module.exports = blogsRouter;
