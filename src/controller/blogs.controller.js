@@ -32,7 +32,7 @@ class BlogsController {
     ctx.body = {
       article: article.toString(),
       ...blog,
-    }
+    };
     await next();
   }
   // 通过博客id拿到博客评论
@@ -86,17 +86,23 @@ class BlogsController {
   }
   // 发布评论
   async publishComment(ctx, next) {
-    const comment = ctx.request.body.comment
-    console.log(comment)
+    const comment = ctx.request.body.comment;
+    console.log(comment);
     try {
-      await blogService.publishComment(comment)
+      await blogService.publishComment(comment);
     } catch (e) {
-      emit(ctx, '服务器查询失败', 500)
-      console.log(e)
+      emit(ctx, "服务器查询失败", 500);
+      console.log(e);
     }
     ctx.body = {
-      msg: '发布成功！'
-    }
+      msg: "发布成功！",
+    };
+    await next();
+  }
+  // 回复评论
+  async replyComment(ctx, next) {
+    ctx.body = '回复评论'
+    await next();
   }
 }
 

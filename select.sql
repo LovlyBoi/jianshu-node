@@ -71,6 +71,7 @@ VALUES
 SELECT
   cu.comment_id,
   cu.content,
+  cu.like,
   JSON_OBJECT(
     'author_id',
     cu.user_id,
@@ -85,13 +86,15 @@ SELECT
       r.id,
       'content',
       r.content,
+      'like',
+      r.like,
       'author',
       JSON_OBJECT(
         'author_id',
         u.id,
         'author_name',
         u.username,
-        'author_avatar',
+        'avatar',
         u.avatar
       )
     )
@@ -102,6 +105,7 @@ FROM
       c.id comment_id,
       c.blog_id blog_id,
       c.content content,
+      c.like like,
       u.id user_id,
       u.username username,
       u.avatar avatar,
