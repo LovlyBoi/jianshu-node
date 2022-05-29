@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `blogs` (
   `updateAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-INSERT INTO
+/* INSERT INTO
   blogs (
     type,
     title,
@@ -65,7 +65,7 @@ VALUES
     'https://www.jianshu.com/p/094d64910e97',
     'markdown/test1.md',
     1
-  );
+  ); */
 
 -- 评论表
 CREATE TABLE IF NOT EXISTS `comments` (
