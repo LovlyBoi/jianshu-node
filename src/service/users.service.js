@@ -27,6 +27,12 @@ class UsersService {
     const result = await connection.execute(statement, [username]);
     return result[0];
   }
+  // 修改用户名
+  async modifyUsername(id, username) {
+    const statement = `UPDATE users SET username = ? WHERE id = ?;`;
+    const result = await connection.execute(statement, [username, id]);
+    return result[0];
+  }
 }
 
 module.exports = new UsersService();

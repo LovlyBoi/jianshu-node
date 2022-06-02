@@ -105,11 +105,11 @@ class BlogsController {
     try {
       await blogService.publishReply(reply);
     } catch (e) {
-      emit(ctx, '服务器查询错误', 500);
+      emit(ctx, "服务器查询错误", 500);
     }
     ctx.body = {
-      msg: '回复成功！',
-    }
+      msg: "回复成功！",
+    };
     await next();
   }
 }

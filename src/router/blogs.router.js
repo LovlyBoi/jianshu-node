@@ -1,7 +1,7 @@
 const KoaRouter = require("koa-router");
 const checkToken = require("../middleware/token.middleware");
 const blogsController = require("../controller/blogs.controller");
-const verifyBlog = require("../middleware/blogs.midddleware");
+const { verifyBlog, verifyReply } = require("../middleware/blogs.midddleware");
 
 const blogsRouter = new KoaRouter({ prefix: "/n/blogs" });
 
@@ -26,6 +26,11 @@ blogsRouter.post(
 blogsRouter.post("/publishComment", checkToken, blogsController.publishComment);
 
 // 回复评论
-blogsRouter.post("/replyComment", checkToken, blogsController.replyComment);
+blogsRouter.post(
+  "/replyComment",
+  checkToken,
+  verifyReply,
+  blogsController.replyComment
+);
 
 module.exports = blogsRouter;

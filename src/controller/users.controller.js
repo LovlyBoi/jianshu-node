@@ -12,18 +12,18 @@ class UsersController {
       await usersService.register(username, crypted);
     } catch (e) {
       console.log("注册失败：", e);
-      return emit(ctx, "注册失败", 406);
+      return emit(ctx, "注册失败", 500);
     }
     // 拿到用户信息
     let user;
     try {
       user = (await usersService.getUserInfo(username))[0];
-    } catch(e) {
-      console.log(e)
+    } catch (e) {
+      console.log(e);
       return emit(ctx, "注册成功，用户id获取失败", 500);
     }
     // 生成token
-    const token = await signToken({username});
+    const token = await signToken({ username });
     ctx.body = {
       username,
       userId: user.id,
@@ -51,7 +51,7 @@ class UsersController {
     // 拿到数据库里的哈希去校验
     const [{ password: crypted, id: userId, avatar }] = result;
     if (await verify(password, crypted)) {
-      const token = await signToken({username});
+      const token = await signToken({ username });
       ctx.body = {
         username,
         userId,
@@ -61,6 +61,20 @@ class UsersController {
       };
     } else {
       return emit(ctx, "密码错误！", 403);
+    }
+    await next();
+  }
+  async modifyUsername(ctx, next) {
+    const { username, id } = ctx.request.body;
+    try {
+      await usersService.modifyUsername(id, username);
+    } catch (e) {
+      console.log(e);
+      emit(ctx, "数据库修改错误", 500);
+    }
+    ctx.body = {
+      msg: '修改成功！',
+      username,
     }
     await next();
   }

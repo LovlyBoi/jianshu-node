@@ -14,4 +14,19 @@ const verifyBlog = async (ctx, next) => {
   await next();
 };
 
-module.exports = verifyBlog;
+const verifyReply = async (ctx, next) => {
+  const reply = ctx.request.body.reply;
+  if (!reply) {
+    return emit(ctx, "回复为空", 400);
+  }
+  if (!reply.author_id) {
+    return emit(ctx, "作者id为空！", 400);
+  } else if (!reply.content) {
+    return emit(ctx, "回复内容为空！", 400);
+  } else if (!reply.comment_id) {
+    return emit(ctx, "回复评论 id 为空！", 400);
+  }
+  await next();
+};
+
+module.exports = { verifyBlog, verifyReply };

@@ -29,7 +29,18 @@ const verifyUserLogin = async (ctx, next) => {
   await next();
 };
 
+const verifyModifyUser = async (ctx, next) => {
+  const { username, id } = ctx.request.body;
+  if (!username) {
+    return emit(ctx, "用户名不能为空", 400);
+  } else if (!id) {
+    return emit(ctx, "用户 id 不能为空", 400);
+  }
+  await next()
+}
+
 module.exports = {
   verifyUserRegister,
   verifyUserLogin,
+  verifyModifyUser,
 };
