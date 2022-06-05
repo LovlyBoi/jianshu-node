@@ -1,5 +1,6 @@
 const path = require("path");
 const multer = require("koa-multer");
+const { CACHE_PATH } = require("../app/init");
 
 function makeStorage(destination) {
   return multer.diskStorage({
@@ -19,9 +20,9 @@ function makeStorage(destination) {
 }
 
 const uploader = {
-  imageUploader: multer({ storage: makeStorage("../cache/image/") }).array(
-    "file"
-  ),
+  imageUploader: multer({
+    storage: makeStorage(path.resolve(CACHE_PATH, "./image/")),
+  }).array("file"),
 };
 
 module.exports = uploader;

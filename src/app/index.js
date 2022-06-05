@@ -7,13 +7,13 @@ const userRouter = require("../router/users.router");
 const uploadRouter = require("../router/uploader.router");
 const blogsRouter = require("../router/blogs.router")
 const errHandler = require("./errorHandle");
-require('./init')
+const { CACHE_PATH } = require('./init')
 
 const app = new Koa();
 
 app.use(koaBodyparser());
 
-app.use(koaStatic(path.resolve(__dirname, "../cache/image")));
+app.use(koaStatic(path.resolve(CACHE_PATH, "./image")));
 
 app.use(userRouter.routes());
 app.use(userRouter.allowedMethods());

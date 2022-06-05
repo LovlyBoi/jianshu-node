@@ -55,6 +55,7 @@ class BlogsController {
       limit ??= 10;
       offset ??= 0;
       const result = await blogService.getBlogs(limit, offset);
+      console.log(result)
       ctx.body = result;
     } catch (e) {
       console.log(e);
