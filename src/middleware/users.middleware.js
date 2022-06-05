@@ -39,8 +39,17 @@ const verifyModifyUser = async (ctx, next) => {
   await next()
 }
 
+const verifyModifyAvatar = async (ctx, next) => {
+  const { id } = ctx.request.query;
+  if (!id) {
+    return emit(ctx, "用户 id 不能为空", 400);
+  }
+  await next()
+}
+
 module.exports = {
   verifyUserRegister,
   verifyUserLogin,
   verifyModifyUser,
+  verifyModifyAvatar,
 };

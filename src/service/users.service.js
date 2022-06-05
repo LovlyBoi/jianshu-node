@@ -33,6 +33,12 @@ class UsersService {
     const result = await connection.execute(statement, [username, id]);
     return result[0];
   }
+  // 修改用户头像
+  async modifyAvatar(id, url) {
+    const statement = `UPDATE users SET avatar = ? WHERE id = ?;`;
+    const result = await connection.execute(statement, [url, id]);
+    return result[0];
+  }
 }
 
 module.exports = new UsersService();

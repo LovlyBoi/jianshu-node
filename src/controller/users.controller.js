@@ -73,9 +73,31 @@ class UsersController {
       emit(ctx, "数据库修改错误", 500);
     }
     ctx.body = {
-      msg: '修改成功！',
+      msg: "修改成功！",
       username,
+    };
+    await next();
+  }
+  async modifyAvatar(ctx, next) {
+    if (ctx.req.files.length >= 1) {
+      const url = ctx.req.files.map(
+        (file) => `${APP_HOSTNAME}:${APP_PORT}/${file.filename}`
+      )[0];
+      const { id } = ctx.request.query;
+      try {
+        await usersService.modifyAvatar(id, url);
+      } catch (e) {
+        console.log(e);
+        emit(ctx, "数据库查询失败", 500);
+      }
+      ctx.body = {
+        url,
+        msg: "上传成功！",
+      };
+    } else {
+      return emit(ctx, "上传失败", 500);
     }
+
     await next();
   }
 }

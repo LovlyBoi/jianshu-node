@@ -7,6 +7,7 @@ const userRouter = require("../router/users.router");
 const uploadRouter = require("../router/uploader.router");
 const blogsRouter = require("../router/blogs.router")
 const errHandler = require("./errorHandle");
+require('./init')
 
 const app = new Koa();
 
