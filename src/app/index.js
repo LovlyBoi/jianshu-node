@@ -15,6 +15,8 @@ app.use(koaBodyparser());
 
 app.use(koaStatic(path.resolve(CACHE_PATH, "./image")));
 
+// app.use(koaStatic('./dist'));
+
 app.use(userRouter.routes());
 app.use(userRouter.allowedMethods());
 

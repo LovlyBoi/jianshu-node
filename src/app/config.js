@@ -5,6 +5,7 @@ dotenv.config()
 module.exports = {
   APP_HOSTNAME,
   APP_PORT,
+  APP_PROXY_PORT,
   MYSQL_HOST,
   MYSQL_PORT,
   MYSQL_DATABASE,

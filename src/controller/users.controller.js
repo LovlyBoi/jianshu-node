@@ -1,5 +1,6 @@
 const usersService = require("../service/users.service");
 const { hash, verify, signToken } = require("../utils/auth");
+const { APP_PROXY_PORT, APP_HOSTNAME } = require("../app/config")
 const emit = require("../utils/errorEmitter");
 
 // 业务逻辑
@@ -81,7 +82,7 @@ class UsersController {
   async modifyAvatar(ctx, next) {
     if (ctx.req.files.length >= 1) {
       const url = ctx.req.files.map(
-        (file) => `${APP_HOSTNAME}:${APP_PORT}/${file.filename}`
+        (file) => `${APP_HOSTNAME}:${APP_PROXY_PORT}/image/${file.filename}`
       )[0];
       const { id } = ctx.request.query;
       try {

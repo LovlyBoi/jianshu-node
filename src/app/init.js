@@ -5,9 +5,9 @@ let { DATA_PATH } = require("./config");
 
 // 判断平台是不是linux系统
 const isLinux = process.platform === "linux";
-// 是linux系统，cache放在 /var/lib/jianshu
+// 是linux系统，cache放在 /usr/share/jianshu
 if (isLinux) {
-  DATA_PATH = '/var/lib/jianshu'
+  DATA_PATH = '/usr/share/jianshu'
 }
 // 不是linux系统，说明在本地开发，cahce放在自定义位置
 let CACHE_PATH = path.resolve(DATA_PATH, "./cache");

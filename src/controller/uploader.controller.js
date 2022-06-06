@@ -1,11 +1,11 @@
-const { APP_HOSTNAME, APP_PORT } = require("../app/config");
+const { APP_HOSTNAME, APP_PROXY_PORT } = require("../app/config");
 const emit = require("../utils/errorEmitter");
 
 class UploaderController {
   async imageUploader(ctx, next) {
     if (ctx.req.files.length >= 1) {
       const url = ctx.req.files.map(
-        (file) => `${APP_HOSTNAME}:${APP_PORT}/${file.filename}`
+        (file) => `${APP_HOSTNAME}:${APP_PROXY_PORT}/image/${file.filename}`
       );
       ctx.body = {
         url,
